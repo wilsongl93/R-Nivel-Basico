@@ -7,7 +7,8 @@
 
 ##--------- 1. working directory wd
 # setear wd
-wd0 <- "C:/Users/Toshiba/Desktop/readr_files_05"
+#wd0 <- "C:/Users/Toshiba/Desktop/readr_files_05"
+wd0<-"C:/Users/Wilson/Documents/R/R-Nivel-Basico"
 setwd(dir = wd0)
 
 # obtencion de wd
@@ -17,30 +18,32 @@ getwd()
 list.files()
 list.files(pattern = ".Rmd")
 
-wd1 <- "C:/Users/Toshiba/Desktop/readr_files_05/read_data"
+wd1 <- "C:/Users/Wilson/Documents/R/R-Nivel-Basico/read_data"
 setwd(dir = wd1)
 list.files()
+getwd()
 list.files(pattern = ".txt")
 
 files <- list.files()
 files
+#Buscar archivos que tengan ,.txt
 grep(files, pattern = ".txt")
 files[grep(files,pattern = ".txt")]
 
 # crear nuevos directorios
 setwd(dir = wd0)
-file.exists("ssl")
-dir.create("ssl")
+file.exists("ssl")#en la carpetta de trabajo aparece algun archivo ssl
+dir.create("ssl")#crear una nueva carpeta ssl
 
 ##--------- 2. read files
 setwd(wd1)
 list.files()
 # read.table function
 # archivo formato txt
-data_txt1 <- read.table(file = "data_read.txt",sep = "\t", dec = ",", header = TRUE)
+data_txt1 <- read.table(file ="data_read.txt",sep = "\t", dec = ",", header = TRUE)
 str(data_txt1)
 View(data_txt1)
-
+attributes(data_txt1)
 names(data_txt1)
 class(data_txt1)
 dim(data_txt1)
@@ -69,35 +72,34 @@ nrow(data_csv)
 summary(data_csv)
 
 # sep = ",", dec = "."
-data_csv1 <- read.csv(file = "data_read.csv")
+data_csv1 <- read.csv(file = "data_read.csv")#automaticamente R interpreta el lenguaje de excel
 str(data_csv1)
 
-data_csv2 <- read.csv(file = "data_read.csv",sep = ",", dec = ".", header = TRUE)
+data_csv2 <- read.csv2(file = "data_read.csv",sep = ",", dec = ".", header = TRUE)
 str(data_csv2)
 
 
 # archivo formato xlsx
 # install.packages("readxl", dependencies = TRUE)
+install.packages("readxl", dependencies = TRUE)
 library(readxl)
 ls("package:readxl")
 # lista de las hojas del libro "data_read.xlsx"
 excel_sheets(path = file.path(wd1, "data_read.xlsx"))
-
 data_xlsx <- read_excel("data_read.xlsx",sheet = "datos",col_names = TRUE, na="")
 str(data_xlsx)
 
 
 
 # archivos spss formato .sav
-# install.packages("foreign", dependencies = TRUE)
+install.packages("foreign", dependencies = TRUE)#lee formatos scv
 library(foreign)
 ls("package:foreign")
-system.time(data_sav1 <- read.spss("data_read.sav", use.value.labels = TRUE, 
-                      to.data.frame = TRUE))
+data_sav1 <- read.spss("data_read.sav", use.value.labels = TRUE, 
+                      to.data.frame = TRUE)
 str(data_sav1)
 
-
-# install.packages("haven", dependencies = TRUE)
+install.packages("haven", dependencies = TRUE)
 # spss: read_spss(), sas: read_sas(), stata: read_dta()
 library(haven)
 ls("package:haven")
@@ -124,12 +126,13 @@ str(data_dbx)
 ## Descargar archivos desde tablas html
 library(RCurl)
 library(XML)
-# install.packages("RCurl", dependencies = TRUE)
-# install.packages("XML", dependencies = TRUE)
-# http://www.sbs.gob.ec/practg/sbs_index?vp_art_id=&vp_tip=6&vp_buscr=/practg/pk_cons_bdd.p_bal_entdd_finnc
-cod_inst=1028
-cod_mes=11
-cod_anio=2010
+install.packages("RCurl", dependencies = TRUE)
+install.packages("XML", dependencies = TRUE)
+#http://www.sbs.gob.ec/practg/sbs_index?vp_art_id=&vp_tip=6&vp_buscr=/practg/pk_cons_bdd.p_bal_entdd_finnc
+cod_inst<-1028
+cod_mes<-11
+cod_anio<-2010
+
 base_url <- paste('http://www.sbs.gob.ec/practg/pk_cons_bdd.p_bal_entdd_finnc?vp_cod_tip_instt=3&vp_cod_instt=',
                   cod_inst,'&vp_anio=', cod_anio, '&vp_mes=', cod_mes, '&vp_cod_tip_catlg=14')
 table_url <- readHTMLTable(base_url)
@@ -195,7 +198,7 @@ edad1 <- edad[-c(1,25,51)]
 length(edad)
 length(edad1)
 # eliminar los primeros 1000 elementos de edad y asignar a edad1
-edad1 <- edad[-c(1,25,51)]
+edad1 <- edad[-(1:1000)]
 length(edad)
 length(edad1)
 
@@ -325,7 +328,7 @@ table(tipviv1)
 # eliminar los elementos iguales a "Familiar" de tipviv y asignar a tipviv1
 tipviv==Familiar
 tipviv=="Familiar"
-tipviv1 <- tipviv[tipviv=="Familiar"]
+tipviv1 <- tipviv["Familiar"]
 # tipviv1 es constante?
 min(tipviv1)==max(tipviv1)
 table(tipviv1)
@@ -436,9 +439,8 @@ barplot(table(tipviv), xlab = "Vivienda", ylab="Frecuencia", main="Diagrama de b
 barplot(table(tipviv), xlab = "Vivienda", ylab="Frecuencia", main="Diagrama de barras",
         col="steelblue", border="gray50")
 
-
 # multiples graficos
-par(mfrow=c(2,2))
+par(mfrow=c(2,2))#divide a la pagina en 4 partes de modo que se llena de manera horizontal
 hist(edad,breaks = 50, xlab = "Edad", ylab="Frecuencia", main="Histograma de Edad",
      col="steelblue", border="gray60")
 boxplot(edad, xlab = "", ylab="Edad", main="Diag cajas de Edad",
@@ -453,6 +455,4 @@ barplot(table(tipviv), xlab = "Vivienda", ylab="Frecuencia", main="Diagrama de b
 # Ejercicio
 # Realice los graficos anteriors para las variables
 # Antiguedad, Cuota_mensual, Estado_civil, eliga los colores y titulos a conveniencia
-
-
 
